@@ -1,13 +1,16 @@
 import Home from "./routes/home/Home.component";
-import { Routes, Route } from "react-router-dom";
+import Navigation from "./routes/navigation/Navigation.component";
+import { Routes, Route} from "react-router-dom";
 
 const App = () => {
-
   return (
-    <Routes>
-      <Route path='/' element={<Home/>} />
-    </Routes>
-  )
-}
+    <>
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </>
+  );
+};
 
 export default App;
