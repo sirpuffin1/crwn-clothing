@@ -5,6 +5,7 @@ import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
 } from "../../utils/firebase/firebase.utils";
+import Button from "../button/Button.component";
 
 const defaultFormFields = {
   displayName: "",
@@ -93,7 +94,7 @@ const SignUpForm = () => {
           name="confirmPassword"
           value={confirmPassword}
         />
-        <button>Sign Up</button>
+        <Button>Sign Up</Button>
       </form>
     </div>
   );
