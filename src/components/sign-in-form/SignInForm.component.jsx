@@ -29,14 +29,13 @@ const SignInForm = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setUserCredentials({ ...userCredentials, [name]: value });
-    console.log(userCredentials);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-        const {user} = await signInAuthUserwithEmailAndPassword(email, password);
+        await signInAuthUserwithEmailAndPassword(email, password);
         resetUserCredentials();
        
     } catch (error) {
