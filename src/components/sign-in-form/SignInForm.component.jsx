@@ -42,7 +42,7 @@ const SignInForm = () => {
         resetUserCredentials();
        
     } catch (error) {
-        console.log('There was an an error signing in.', error)
+        alert(error.message)
     }
     
   };
