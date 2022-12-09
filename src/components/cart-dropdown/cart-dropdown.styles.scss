@@ -20,7 +20,17 @@
       height: 240px;
       display: flex;
       flex-direction: column;
-      overflow: scroll;
+      overflow-y: scroll;
+    }
+
+    ::-webkit-scrollbar {
+      background: white;
+      width: 7px;
+    }
+   
+    ::-webkit-scrollbar-thumb {
+      background: lightgray;
+      border-radius: 5px;
     }
   
     button {
