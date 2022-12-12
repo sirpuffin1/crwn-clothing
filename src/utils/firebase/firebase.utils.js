@@ -7,10 +7,10 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from "firebase/auth";
 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyD-hsPy8LzDNUD3_PraljOs4hmszvwdG94",
   authDomain: "crwn-clothing-db-753fc.firebaseapp.com",
@@ -30,12 +30,48 @@ googleProvider.setCustomParameters({
 });
 
 export const auth = getAuth();
+
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
+
 export const signInWithGoogleRedirect = () =>
   signInWithRedirect(auth, googleProvider);
 
 export const db = getFirestore();
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db)
+
+  objectsToAdd.forEach((object) => {
+    const docRef = doc(collectionRef, object.title.toLowerCase())
+    batch.set(docRef, object)
+  })
+
+  await batch.commit();
+  console.log('batch is done writing')
+}
+
+export const getCategoriesAndDocuments = async () => {
+  //create a reference to the desired collection in this case categories
+  const collectionRef = collection(db, 'categories')
+  // create a query based on the collection reference described above
+  const q = query(collectionRef)
+  // create a snapshot for the documents received from the query 
+  const querySnapshot = await getDocs(q)
+  // create a category map by using reducer to iterate over the queryied snapshots
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    //destructure title and items from the snapshot data
+    const { title, items } = docSnapshot.data();
+    // set the acc to now hold the property of title with the value of the current snapshot's items
+    acc[title.toLowerCase()] = items
+
+    return acc;
+  }, {})
+
+  return categoryMap; 
+
+}
 
 export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {
   if (!userAuth) return;
@@ -73,7 +109,6 @@ export const signInAuthUserwithEmailAndPassword = async (email, password) => {
 
   return await signInWithEmailAndPassword(auth, email, password)
 }
-
 
 export const signOutUser = async() => await signOut(auth);
 
