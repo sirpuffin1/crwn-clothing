@@ -45,7 +45,7 @@ export const DirectoryItemContainer = styled.div`
   margin: 0 7.5px 15px;
   overflow: hidden;
 
-  &:hover {
+  & :hover {
     cursor: pointer;
 
     & ${BackgroundImage} {
