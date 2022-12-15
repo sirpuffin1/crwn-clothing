@@ -61,17 +61,8 @@ export const getCategoriesAndDocuments = async () => {
   // create a snapshot for the documents received from the query 
   const querySnapshot = await getDocs(q)
   // create a category map by using reducer to iterate over the queryied snapshots
-  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    //destructure title and items from the snapshot data
-    const { title, items } = docSnapshot.data();
-    // set the acc to now hold the property of title with the value of the current snapshot's items
-    acc[title.toLowerCase()] = items
-
-    return acc;
-  }, {})
-
-  return categoryMap; 
-
+ return querySnapshot.docs.map(docSnapshot => docSnapshot.data())
+  
 }
 
 export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {
