@@ -1,19 +1,28 @@
-import {useSelector } from 'react-redux'
+import { useSelector } from "react-redux";
 import CategoryPreview from "../../components/category-preview/CategoryPreview.component";
-import { selectCategoriesMap } from "../../store/categories/category.selector";
+import {
+  selectCategoriesMap,
+  selectCategoriesIsLoading,
+} from "../../store/categories/category.selector";
+import Spinner from "../../components/spinner/Spinner.component";
 
 const CategoriesPreview = () => {
-  const categoriesMap = useSelector(selectCategoriesMap)
+  const categoriesMap = useSelector(selectCategoriesMap);
+  const isLoading = useSelector(selectCategoriesIsLoading);
   return (
     <>
-        {Object.keys(categoriesMap).map((title) => {
-            const products = categoriesMap[title]
-            return (
-                <CategoryPreview key={title} title={title} products={products} /> 
-            )
-        })}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        Object.keys(categoriesMap).map((title) => {
+          const products = categoriesMap[title];
+          return (
+            <CategoryPreview key={title} title={title} products={products} />
+          );
+        })
+      )}
     </>
   );
 };
 
-export default CategoriesPreview ;
+export default CategoriesPreview;
