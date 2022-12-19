@@ -1,4 +1,4 @@
-import { createAction } from "../../utils/firebase/reducer/reducer.utils";
+import { createAction } from "../../utils/reducer/reducer.utils";
 import { CART_ACTION_TYPE } from "./cart.types";
 
 export const setIsCartOpen = (boolean) =>
