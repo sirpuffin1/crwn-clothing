@@ -1,11 +1,12 @@
 import { useState } from "react";
-import {
-  signInWithGooglePopup,
-  signInAuthUserwithEmailAndPassword
-} from "../../utils/firebase/firebase.utils";
-import Button, {BUTTON_TYPES_CLASSES} from "../button/Button.component";
+import Button, { BUTTON_TYPES_CLASSES } from "../button/Button.component";
 import FormInput from "../form-input/FormInput.component";
-import "./sign-in-form.styles.scss"
+import "./sign-in-form.styles.scss";
+import { useDispatch } from "react-redux";
+import {
+  googleSignInStart,
+  emailSignInStart,
+} from "../../store/user/user.action";
 
 let defaultUserCredentials = {
   email: "",
@@ -13,6 +14,8 @@ let defaultUserCredentials = {
 };
 
 const SignInForm = () => {
+  const dispatch = useDispatch();
+
   const [userCredentials, setUserCredentials] = useState(
     defaultUserCredentials
   );
@@ -23,7 +26,7 @@ const SignInForm = () => {
   };
 
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
+    dispatch(googleSignInStart());
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -34,13 +37,11 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-        await signInAuthUserwithEmailAndPassword(email, password);
-        resetUserCredentials();
-       
+      dispatch(emailSignInStart(email, password));
+      resetUserCredentials();
     } catch (error) {
-        alert(error.message)
+      alert(error.message);
     }
-    
   };
 
   return (
@@ -66,7 +67,11 @@ const SignInForm = () => {
         />
         <div className="buttons-container">
           <Button type="submit">Sign In</Button>
-          <Button type="button" buttonType={BUTTON_TYPES_CLASSES.google} onClick={signInWithGoogle}>
+          <Button
+            type="button"
+            buttonType={BUTTON_TYPES_CLASSES.google}
+            onClick={signInWithGoogle}
+          >
             google sign in
           </Button>
         </div>
