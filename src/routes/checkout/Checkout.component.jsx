@@ -2,6 +2,7 @@ import './checkout.styles.scss'
 import CheckoutItem from '../../components/checkout-item/CheckoutItem.component';
 import { selectCartItems, selectCartTotal } from '../../store/cart/cart.selector';
 import { useSelector } from 'react-redux'
+import PaymentForm from '../../components/payment-form/PaymentForm.component';
 
 
 const Checkout = () => {
@@ -36,6 +37,8 @@ const Checkout = () => {
       <CheckoutItem key={cartItem.id} cartItem={cartItem} />
             ))}
             <span className='total'>Total: ${cartTotal}</span>
+            <PaymentForm />
+            <h2> uhhh</h2>
         </div>
     );
 }
