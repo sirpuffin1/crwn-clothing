@@ -1,55 +1,82 @@
-import {PaymentFormContainer, FormContainer} from "./payment-form.styles.jsx"
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
-import Button, { BUTTON_TYPES_CLASSES} from "../button/Button.component";
-
+import {
+  PaymentFormContainer,
+  FormContainer,
+  PaymentButton,
+} from "./payment-form.styles.jsx";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { BUTTON_TYPES_CLASSES } from "../button/Button.component";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { clearCart } from "../../store/cart/cart.action.js";
+import { selectCartTotal } from "../../store/cart/cart.selector.js";
+import { selectCurrentUser } from "../../store/user/user.selector";
+import { useNavigate } from "react-router-dom"
 
 const PaymentForm = () => {
-    const stripe = useStripe();
-    const elements = useElements();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const stripe = useStripe();
+  const elements = useElements();
+  const amount = useSelector(selectCartTotal);
+  const currentUser = useSelector(selectCurrentUser);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
-    const paymentHandler = async (e) => {
-        e.preventDefault();
+  const paymentHandler = async (e) => {
+    e.preventDefault();
 
-        if(!stripe || !elements) return;
+    if (!stripe || !elements) return;
 
-        const response = await fetch('/.netlify/functions/create-payment-intent',
-        {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ amount: 10000})
-        }).then(res => res.json())
+    setIsProcessingPayment(true);
 
-        const {paymentIntent: { client_secret}} = response
-        console.log(client_secret)
+    const response = await fetch("/.netlify/functions/create-payment-intent", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount: amount * 100 }),
+    }).then((res) => res.json());
 
-        const paymentResult = await stripe.confirmCardPayment(client_secret, {
-            payment_method: {
-                card: elements.getElement(CardElement),
-                billing_details: {
-                    name: 'Anguala'
-                }
-            }
-        });
+    const {
+      paymentIntent: { client_secret },
+    } = response;
+    console.log(client_secret);
 
-        if(paymentResult.error) {
-            alert(paymentResult.error, 'errorrr')
-        } else {
-            if(paymentResult.paymentIntent.status === 'succeeded') {
-                alert('payment successful')
-            }
-        }
+    const paymentResult = await stripe.confirmCardPayment(client_secret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+        billing_details: {
+          name: currentUser ? currentUser.displayName : "Guest",
+        },
+      },
+    });
+
+    setIsProcessingPayment(false);
+
+    if (paymentResult.error) {
+      alert(paymentResult.error, "errorrr");
+    } else {
+      if (paymentResult.paymentIntent.status === "succeeded") {
+        alert("payment successful");
+        navigate('/')
+        dispatch(clearCart());
+        
+      }
     }
-    return (
-        <PaymentFormContainer>
-            <FormContainer onSubmit={paymentHandler}>
-                <h2>Credit Card Payment: </h2>
-            <CardElement />
-            <Button buttonType={BUTTON_TYPES_CLASSES.inverted}>Pay now</Button>
-            </FormContainer>
-        </PaymentFormContainer>
-    );
-}
+  };
+  return (
+    <PaymentFormContainer>
+      <FormContainer onSubmit={paymentHandler}>
+        <h2>Credit Card Payment: </h2>
+        <CardElement />
+        <PaymentButton
+          buttonType={BUTTON_TYPES_CLASSES.inverted}
+          isLoading={isProcessingPayment}
+        >
+          Pay now
+        </PaymentButton>
+      </FormContainer>
+    </PaymentFormContainer>
+  );
+};
 
 export default PaymentForm;

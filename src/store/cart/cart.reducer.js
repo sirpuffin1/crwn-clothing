@@ -20,6 +20,12 @@ export const cartReducer = (state = CART_INITIAL_STATE, action = {}) => {
         ...state,
         isCartOpen: payload,
       };
+
+    case CART_ACTION_TYPE.CLEAR_CART:
+      return {
+        ...state,
+        cartItems: CART_INITIAL_STATE.cartItems
+      }
     default:
       return state;
   }

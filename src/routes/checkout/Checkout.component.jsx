@@ -38,7 +38,6 @@ const Checkout = () => {
             ))}
             <span className='total'>Total: ${cartTotal}</span>
             <PaymentForm />
-            <h2> uhhh</h2>
         </div>
     );
 }
