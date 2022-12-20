@@ -4,10 +4,6 @@ import { signUpStart } from "../../store/user/user.action";
 import FormInput from "../form-input/FormInput.component";
 
 import './sign-up-form.styles.scss'
-import {
-  createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth,
-} from "../../utils/firebase/firebase.utils";
 import Button from "../button/Button.component";
 
 const defaultFormFields = {
