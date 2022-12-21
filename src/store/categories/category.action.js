@@ -1,6 +1,6 @@
 import { getCategoriesAndDocuments } from "../../utils/firebase/firebase.utils";
 import { createAction } from "../../utils/reducer/reducer.utils";
-import { CATEGORIES_ACTION_TYPE } from "./category.types";
+import { CATEGORIES_ACTION_TYPE } from "./category.types.ts";
 
 export const setCategories = (categoriesArray) =>
   createAction(CATEGORIES_ACTION_TYPE.SET_CATEGORIES, categoriesArray);

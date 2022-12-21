@@ -1,4 +1,4 @@
-import { CATEGORIES_ACTION_TYPE } from "./category.types";
+import { CATEGORIES_ACTION_TYPE } from "./category.types.ts";
 
 export const CATEGORIES_INITIAL_STATE = {
   categories: [],
