@@ -2,7 +2,7 @@
 
 export type ActionWithPayload<T, P> = {
     type: T,
-    payload?: P
+    payload: P
 }
 
 export type Action<T> = {
