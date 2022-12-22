@@ -1,11 +1,10 @@
 import Button from "../button/Button.component";
-import {CartDropdownContainer,  EmptyMessage, CartItems} from "./cart-dropdown.styles.jsx";
+import {CartDropdownContainer,  EmptyMessage, CartItems} from "./cart-dropdown.styles";
 import CartItem from "../cart-item/CartItem.component";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsCartOpen } from "../../store/cart/cart.action"
 import { selectCartItems } from "../../store/cart/cart.selector"
-
 
 const CartDropdown = () => {
   const navigate = useNavigate();
