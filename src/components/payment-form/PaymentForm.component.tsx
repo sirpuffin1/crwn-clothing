@@ -2,13 +2,13 @@ import {
   PaymentFormContainer,
   FormContainer,
   PaymentButton,
-} from "./payment-form.styles.jsx";
+} from "./payment-form.styles";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { BUTTON_TYPES_CLASSES } from "../button/Button.component";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "../../store/cart/cart.action";
-import { selectCartTotal } from "../../store/cart/cart.selector";
+import { selectCartTotal, selectCartItems } from "../../store/cart/cart.selector";
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { useNavigate } from "react-router-dom"
 
@@ -19,9 +19,10 @@ const PaymentForm = () => {
   const elements = useElements();
   const amount = useSelector(selectCartTotal);
   const currentUser = useSelector(selectCurrentUser);
+  const cartItems = useSelector(selectCartItems)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
-  const paymentHandler = async (e) => {
+  const paymentHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!stripe || !elements) return;
@@ -39,11 +40,14 @@ const PaymentForm = () => {
     const {
       paymentIntent: { client_secret },
     } = response;
-    console.log(client_secret);
+
+    const cardDetails = elements.getElement(CardElement)
+
+    if(cardDetails === null) return;
 
     const paymentResult = await stripe.confirmCardPayment(client_secret, {
       payment_method: {
-        card: elements.getElement(CardElement),
+        card: cardDetails,
         billing_details: {
           name: currentUser ? currentUser.displayName : "Guest",
         },
@@ -53,13 +57,12 @@ const PaymentForm = () => {
     setIsProcessingPayment(false);
 
     if (paymentResult.error) {
-      alert(paymentResult.error, "errorrr");
+      alert(paymentResult.error);
     } else {
       if (paymentResult.paymentIntent.status === "succeeded") {
         alert("payment successful");
         navigate('/')
-        dispatch(clearCart());
-        
+        dispatch(clearCart(cartItems));
       }
     }
   };
