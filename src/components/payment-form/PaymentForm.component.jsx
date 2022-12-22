@@ -7,8 +7,8 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { BUTTON_TYPES_CLASSES } from "../button/Button.component";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { clearCart } from "../../store/cart/cart.action.js";
-import { selectCartTotal } from "../../store/cart/cart.selector.js";
+import { clearCart } from "../../store/cart/cart.action";
+import { selectCartTotal } from "../../store/cart/cart.selector";
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { useNavigate } from "react-router-dom"
 
