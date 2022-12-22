@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import Button, { BUTTON_TYPES_CLASSES } from "../button/Button.component";
 import FormInput from "../form-input/FormInput.component";
 import "./sign-in-form.styles.scss";
@@ -7,6 +7,7 @@ import {
   googleSignInStart,
   emailSignInStart,
 } from "../../store/user/user.action";
+import { AuthError } from "firebase/auth";
 
 let defaultUserCredentials = {
   email: "",
@@ -28,19 +29,19 @@ const SignInForm = () => {
   const signInWithGoogle = async () => {
     dispatch(googleSignInStart());
   };
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUserCredentials({ ...userCredentials, [name]: value });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
       dispatch(emailSignInStart(email, password));
       resetUserCredentials();
     } catch (error) {
-      alert(error.message);
+      alert((error as AuthError).message);
     }
   };
 
